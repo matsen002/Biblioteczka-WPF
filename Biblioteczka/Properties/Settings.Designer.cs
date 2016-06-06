@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace Biblioteczka.Properties
+namespace MyLibrary.Properties
 {
 
 

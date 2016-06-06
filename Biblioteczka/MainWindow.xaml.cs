@@ -5,67 +5,69 @@ using System.IO;
 using System.Windows;
 using System.Windows.Data;
 
-namespace Biblioteczka
+namespace MyLibrary
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
     public partial class MainWindow : Window
     {
-        public ObservableCollection<Ksiazka> KsiazkaList { get; set; }
+        public ObservableCollection<Book> BookList { get; set; }
         public ObservableCollection<Audiobook> AudiobookList { get; set; }
-        public ObservableCollection<Film> FilmList { get; set; }
-        
-        int wSumieDoPrzeczytania = 0;
-        int wSumieDoWysluchania = 0;
-        int wSumieDoObejrzenia = 0;
+        public ObservableCollection<Movie> MovieList { get; set; }
+
+        int totalToRead = 0;
+        int totalToListen = 0;
+        int totalToWatch = 0;
 
         public MainWindow()
         {
             InitializeComponent();
             DataContext = this;
-            KsiazkaList = new ObservableCollection<Ksiazka>();
+
+            BookList = new ObservableCollection<Book>();
             AudiobookList = new ObservableCollection<Audiobook>();
-            FilmList = new ObservableCollection<Film>();
+            MovieList = new ObservableCollection<Movie>();
 
-            ComboBoxy();
-        }
-        
-        public void ComboBoxy()     //Ustawienie domyslnych wartości w ComboBoxach
-        {
-            KategoriaComboBox.ItemsSource = Enum.GetValues(typeof(Kategorie));
-            KategoriaComboBox.SelectedIndex = 0;
-
-            GatunekComboBox.ItemsSource = Enum.GetValues(typeof(Gatunki));
-            GatunekComboBox.SelectedIndex = 0;
-
-            NazwaPlikuTXT.Text = "Podaj nazwę pliku";
+            SetComboBox();
         }
 
-        private void AddButton_Click(object sender, RoutedEventArgs e)      
+        public void SetComboBox()
         {
-            string autor = AutorTextBox.Text;
-            string tytul = TytulTextBox.Text;
+            CategoryComboBox.ItemsSource = Enum.GetValues(typeof(Categories));
+            CategoryComboBox.SelectedIndex = 0;
 
-            int iloscStron, czasTrwania, liczbaAktorow;
-            string dataPremiery, numerISBN;
+            TypeComboBox.ItemsSource = Enum.GetValues(typeof(Types));
+            TypeComboBox.SelectedIndex = 0;
 
-            Kategorie kategoria = (Kategorie)Enum.Parse(typeof(Kategorie), KategoriaComboBox.Text);
-            Gatunki gatunek = (Gatunki)Enum.Parse(typeof(Gatunki), GatunekComboBox.Text);
+            fileNameTXT.Text = "Podaj pełną ścieżkę do pliku";
+        }
 
-            int wybranaKategoria = KategoriaComboBox.SelectedIndex;
-            switch (wybranaKategoria)
+        private void AddButton_Click(object sender, RoutedEventArgs e)
+        {
+            string author = AuthorTextBox.Text;
+            string title = TitleTextBox.Text;
+            string releaseDate, nISBN;
+
+            Categories category = (Categories)Enum.Parse(typeof(Categories), CategoryComboBox.Text);
+            Types type = (Types)Enum.Parse(typeof(Types), TypeComboBox.Text);
+
+            int numberOfPages, length, numberOfActors;
+            int selectedCategory = CategoryComboBox.SelectedIndex;
+
+            switch (selectedCategory)
             {
                 case 0:
-                    try {
-                        numerISBN = PierwszeDodatkoweInfoTextBox.Text;
-                        iloscStron = int.Parse(DrugieDodatkoweInfoTextBox.Text);
+                    try
+                    {
+                        nISBN = FirstAdditionalInformationInfoTextBox.Text;
+                        numberOfPages = int.Parse(SecondAdditionalInformationInfoTextBox.Text);
 
-                        Ksiazka ksiazka = new Ksiazka(tytul, autor, kategoria, gatunek, numerISBN, iloscStron);
-                        KsiazkaList.Add(ksiazka);
-                        
-                        wSumieDoPrzeczytania = ksiazka.Ciekawostka(wSumieDoPrzeczytania, 1);
-                        CiekawostkaTextBlock2.Text = wSumieDoPrzeczytania + " stron";
+                        Book book = new Book(title, author, category, type, nISBN, numberOfPages);
+                        BookList.Add(book);
+
+                        totalToRead = book.News(totalToRead, 1);
+                        NewsTextBlock2.Text = totalToRead + " stron";
                     }
                     catch
                     {
@@ -73,15 +75,16 @@ namespace Biblioteczka
                     }
                     break;
                 case 1:
-                    try {
-                        czasTrwania = int.Parse(DrugieDodatkoweInfoTextBox.Text);
-                        liczbaAktorow = int.Parse(PierwszeDodatkoweInfoTextBox.Text);
+                    try
+                    {
+                        length = int.Parse(SecondAdditionalInformationInfoTextBox.Text);
+                        numberOfActors = int.Parse(FirstAdditionalInformationInfoTextBox.Text);
 
-                        Audiobook audiobook = new Audiobook(tytul, autor, kategoria, gatunek, czasTrwania, liczbaAktorow);
+                        Audiobook audiobook = new Audiobook(title, author, category, type, length, numberOfActors);
                         AudiobookList.Add(audiobook);
 
-                        wSumieDoWysluchania = audiobook.Ciekawostka(wSumieDoWysluchania, 1);
-                        CiekawostkaTextBlock2.Text = wSumieDoWysluchania + " minut nagrań";
+                        totalToListen = audiobook.News(totalToListen, 1);
+                        NewsTextBlock2.Text = totalToListen + " minut nagrań";
                     }
                     catch
                     {
@@ -91,14 +94,14 @@ namespace Biblioteczka
                 case 2:
                     try
                     {
-                        dataPremiery = PierwszeDodatkoweInfoTextBox.Text;
-                        czasTrwania = int.Parse(DrugieDodatkoweInfoTextBox.Text);
+                        releaseDate = FirstAdditionalInformationInfoTextBox.Text;
+                        length = int.Parse(SecondAdditionalInformationInfoTextBox.Text);
 
-                        Film film = new Film(tytul, autor, kategoria, gatunek, czasTrwania, dataPremiery);
-                        FilmList.Add(film);
-                        
-                        wSumieDoObejrzenia = film.Ciekawostka(wSumieDoObejrzenia, 1);
-                        CiekawostkaTextBlock2.Text = wSumieDoObejrzenia + " minut filmów";
+                        Movie movie = new Movie(title, author, category, type, length, releaseDate);
+                        MovieList.Add(movie);
+
+                        totalToWatch = movie.News(totalToWatch, 1);
+                        NewsTextBlock2.Text = totalToWatch + " minut filmów";
                     }
                     catch
                     {
@@ -108,43 +111,43 @@ namespace Biblioteczka
             }
         }
 
-        private void KategoriaComboBox_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)     //Wybór dodatkowych informacji o pozycjach w zależności od wybranej kategorii
+        private void CategoryComboBox_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)     //Wybór dodatkowych informacji o pozycjach w zależności od wybranej kategorii
         {
-            int wybranaKategoria = KategoriaComboBox.SelectedIndex;
-            switch (wybranaKategoria)
+            int selectedCategory = CategoryComboBox.SelectedIndex;
+            switch (selectedCategory)
             {
                 case 0:
-                    PierwszeDodatkoweInfoTextBlock.Text = "Numer ISBN:";
-                    DrugieDodatkoweInfoTextBlock.Text = "Ilość stron:";
-                    CiekawostkaTextBlock.Text = "Do przeczytania jest w sumie ";
-                    CiekawostkaTextBlock2.Text = wSumieDoPrzeczytania + " stron";
+                    FirstAdditionalInformationInfoTextBlock.Text = "Numer ISBN:";
+                    SecondAdditionalInformationInfoTextBlock.Text = "Ilość stron:";
+                    NewsTextBlock.Text = "Do przeczytania jest w sumie ";
+                    NewsTextBlock2.Text = totalToRead + " stron";
                     break;
                 case 1:
-                    DrugieDodatkoweInfoTextBlock.Text = "Czas trwania:";
-                    PierwszeDodatkoweInfoTextBlock.Text = "Liczba aktorów:";
-                    CiekawostkaTextBlock.Text = "Do wysłuchania jest w sumie ";
-                    CiekawostkaTextBlock2.Text = wSumieDoWysluchania + " minut nagrań";
+                    SecondAdditionalInformationInfoTextBlock.Text = "Czas trwania:";
+                    FirstAdditionalInformationInfoTextBlock.Text = "Liczba aktorów:";
+                    NewsTextBlock.Text = "Do wysłuchania jest w sumie ";
+                    NewsTextBlock2.Text = totalToListen + " minut nagrań";
                     break;
                 case 2:
-                    DrugieDodatkoweInfoTextBlock.Text = "Czas trwania:";
-                    PierwszeDodatkoweInfoTextBlock.Text = "Data premiery:";
-                    CiekawostkaTextBlock.Text = "Do obejrzenia jest w sumie ";
-                    CiekawostkaTextBlock2.Text = wSumieDoObejrzenia + " minut filmów";
+                    SecondAdditionalInformationInfoTextBlock.Text = "Czas trwania:";
+                    FirstAdditionalInformationInfoTextBlock.Text = "Data premiery:";
+                    NewsTextBlock.Text = "Do obejrzenia jest w sumie ";
+                    NewsTextBlock2.Text = totalToWatch + " minut filmów";
                     break;
             }
         }
 
         private void DelateButton_Click(object sender, RoutedEventArgs e)   //Usuwanie zaznaczonej pozycji w wybranej kategorii
         {
-            int wybranaKategoria = KategoriaComboBox.SelectedIndex;
-            switch (wybranaKategoria)
+            int selectedCategory = CategoryComboBox.SelectedIndex;
+            switch (selectedCategory)
             {
                 case 0:
                     try
                     {
-                        wSumieDoPrzeczytania = KsiazkaList[KsiazkaListView.SelectedIndex].Ciekawostka(wSumieDoPrzeczytania, 0);
-                        CiekawostkaTextBlock2.Text = wSumieDoPrzeczytania + " stron";
-                        KsiazkaList.RemoveAt(KsiazkaListView.SelectedIndex);
+                        totalToRead = BookList[KsiazkaListView.SelectedIndex].News(totalToRead, 0);
+                        NewsTextBlock2.Text = totalToRead + " stron";
+                        BookList.RemoveAt(KsiazkaListView.SelectedIndex);
                     }
                     catch
                     {
@@ -154,8 +157,8 @@ namespace Biblioteczka
                 case 1:
                     try
                     {
-                        wSumieDoWysluchania = AudiobookList[AudiobookListView.SelectedIndex].Ciekawostka(wSumieDoWysluchania, 0);
-                        CiekawostkaTextBlock2.Text = wSumieDoWysluchania + " minut nagrań";
+                        totalToListen = AudiobookList[AudiobookListView.SelectedIndex].News(totalToListen, 0);
+                        NewsTextBlock2.Text = totalToListen + " minut nagrań";
                         AudiobookList.RemoveAt(AudiobookListView.SelectedIndex);
                     }
                     catch
@@ -166,9 +169,9 @@ namespace Biblioteczka
                 case 2:
                     try
                     {
-                        wSumieDoObejrzenia = FilmList[FilmListView.SelectedIndex].Ciekawostka(wSumieDoObejrzenia, 0);
-                        CiekawostkaTextBlock2.Text = wSumieDoObejrzenia + " minut filmów";
-                        FilmList.RemoveAt(FilmListView.SelectedIndex);
+                        totalToWatch = MovieList[FilmListView.SelectedIndex].News(totalToWatch, 0);
+                        NewsTextBlock2.Text = totalToWatch + " minut filmów";
+                        MovieList.RemoveAt(FilmListView.SelectedIndex);
                     }
                     catch
                     {
@@ -177,66 +180,65 @@ namespace Biblioteczka
                     break;
             }
         }
-            
-        private void WczytajPlikTXT_Click(object sender, RoutedEventArgs e)
+
+        private void ReadTXTFile_Click(object sender, RoutedEventArgs e)
         {
             try
             {
-                string nazwaPliku = "D:\\" + NazwaPlikuTXT.Text;
+                string fileName = fileNameTXT.Text;
 
-                FileStream fs = new FileStream(nazwaPliku,
+                FileStream fileStream = new FileStream(fileName,
                 FileMode.Open, FileAccess.Read);
 
                 try
                 {
-                    StreamReader sr = new StreamReader(fs);
-                    //string[] linie = File.ReadAllLines(nazwaPliku);
+                    StreamReader streamReader = new StreamReader(fileStream);
 
-                    while (sr.EndOfStream == false)          //Wykonuj dopoki odczyt nie dojdzie do konca pliku
+                    while (streamReader.EndOfStream == false)
                     {
-                        string linia = sr.ReadLine();
-                        string[] tablica = linia.Split(' ');
+                        string line = streamReader.ReadLine();
+                        string[] table = line.Split('_');
 
-                        if (tablica[0] == "Książka")
+                        if (table[0] == "Książka")
                         {
-                            Kategorie kategoria = (Kategorie)Enum.Parse(typeof(Kategorie), "Książka");
-                            string tytul = tablica[1];
-                            string autor = tablica[2];
-                            string numerISBN = tablica[3];
-                            int iloscStron = int.Parse(tablica[4]);
-                            Gatunki gatunek = (Gatunki)Enum.Parse(typeof(Gatunki), tablica[5]);
-                            Ksiazka ksiazka = new Ksiazka(tytul, autor, kategoria, gatunek, numerISBN, iloscStron);
-                            KsiazkaList.Add(ksiazka);
-                            wSumieDoPrzeczytania = ksiazka.Ciekawostka(wSumieDoPrzeczytania, 1);
+                            Categories category = (Categories)Enum.Parse(typeof(Categories), "Książka");
+                            string title = table[1];
+                            string author = table[2];
+                            string nISBN = table[3];
+                            int numberOfPages = int.Parse(table[4]);
+                            Types type = (Types)Enum.Parse(typeof(Types), table[5]);
+                            Book book = new Book(title, author, category, type, nISBN, numberOfPages);
+                            BookList.Add(book);
+                            totalToRead = book.News(totalToRead, 1);
                         }
-                        else if (tablica[0] == "Audiobook")
+                        else if (table[0] == "Audiobook")
                         {
-                            Kategorie kategoria = (Kategorie)Enum.Parse(typeof(Kategorie), "Audiobook");
-                            string tytul = tablica[1];
-                            string autor = tablica[2];
-                            int czasTrwania = int.Parse(tablica[3]);
-                            int liczbaAktorow = int.Parse(tablica[4]);
-                            Gatunki gatunek = (Gatunki)Enum.Parse(typeof(Gatunki), tablica[5]);
-                            Audiobook audiobook = new Audiobook(tytul, autor, kategoria, gatunek, czasTrwania, liczbaAktorow);
+                            Categories category = (Categories)Enum.Parse(typeof(Categories), "Audiobook");
+                            string title = table[1];
+                            string author = table[2];
+                            int length = int.Parse(table[3]);
+                            int numberOfActors = int.Parse(table[4]);
+                            Types type = (Types)Enum.Parse(typeof(Types), table[5]);
+                            Audiobook audiobook = new Audiobook(title, author, category, type, length, numberOfActors);
                             AudiobookList.Add(audiobook);
-                            wSumieDoWysluchania = audiobook.Ciekawostka(wSumieDoWysluchania, 1);
+                            totalToListen = audiobook.News(totalToListen, 1);
                         }
-                        else if (tablica[0] == "Film")
+                        else if (table[0] == "Film")
                         {
-                            Kategorie kategoria = (Kategorie)Enum.Parse(typeof(Kategorie), "Film");
-                            string tytul = tablica[1];
-                            string autor = tablica[2];
-                            int czasTrwania = int.Parse(tablica[3]);
-                            string dataPremiery = tablica[4];
-                            Gatunki gatunek = (Gatunki)Enum.Parse(typeof(Gatunki), tablica[5]);
-                            Film film = new Film(tytul, autor, kategoria, gatunek, czasTrwania, dataPremiery);
-                            FilmList.Add(film);
-                            wSumieDoObejrzenia = film.Ciekawostka(wSumieDoObejrzenia, 1);
+                            Categories category = (Categories)Enum.Parse(typeof(Categories), "Film");
+                            string title = table[1];
+                            string author = table[2];
+                            int length = int.Parse(table[3]);
+                            string releaseDate = table[4];
+                            Types type = (Types)Enum.Parse(typeof(Types), table[5]);
+                            Movie movie = new Movie(title, author, category, type, length, releaseDate);
+                            MovieList.Add(movie);
+                            totalToWatch = movie.News(totalToWatch, 1);
                         }
                         else MessageBox.Show("Coś jest nie tak");
                     }
 
-                    sr.Close();
+                    streamReader.Close();
 
                     MessageBox.Show("Wczytano pomyslnie");
                 }
@@ -247,59 +249,59 @@ namespace Biblioteczka
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.ToString());
+                MessageBox.Show("Nie można otworzyć pliku. Podaj dokładną ścieżkę, np. D:\\nazwa_pliku.txt");
             }
         }
 
-        private void ZapiszPlikTXT_Click(object sender, RoutedEventArgs e)
+        private void WriteToTXTFile_Click(object sender, RoutedEventArgs e)
         {
             try
             {
-                string nazwaPliku = "D:\\" + NazwaPlikuTXT.Text;
+                string fileName = fileNameTXT.Text;
 
-                FileStream fs = new FileStream(nazwaPliku,
+                FileStream fileStream = new FileStream(fileName,
                 FileMode.CreateNew, FileAccess.ReadWrite);
 
                 try
                 {
-                    StreamWriter sw = new StreamWriter(fs);
+                    StreamWriter streamWriter = new StreamWriter(fileStream);
 
-                    for (int i = 0; i < KsiazkaList.Count; i++)
+                    for (int i = 0; i < BookList.Count; i++)
                     {
-                        sw.Write(KsiazkaList[i].Kategoria + " ");
-                        sw.Write(KsiazkaList[i].Tytul + " ");
-                        sw.Write(KsiazkaList[i].Autor + " ");
-                        sw.Write(KsiazkaList[i].NumerISBN + " ");
-                        sw.Write(KsiazkaList[i].IloscStron + " ");
-                        sw.WriteLine(KsiazkaList[i].Gatunek + " ");
+                        streamWriter.Write(BookList[i].Category + "_");
+                        streamWriter.Write(BookList[i].Title + "_");
+                        streamWriter.Write(BookList[i].Author + "_");
+                        streamWriter.Write(BookList[i].ISBN + "_");
+                        streamWriter.Write(BookList[i].NumberOfPages + "_");
+                        streamWriter.WriteLine(BookList[i].Type + "_");
                     }
 
                     for (int i = 0; i < AudiobookList.Count; i++)
                     {
-                        sw.Write(AudiobookList[i].Kategoria + " ");
-                        sw.Write(AudiobookList[i].Tytul + " ");
-                        sw.Write(AudiobookList[i].Autor + " ");
-                        sw.Write(AudiobookList[i].CzasTrwania + " ");
-                        sw.Write(AudiobookList[i].LiczbaAktorow + " ");
-                        sw.WriteLine(AudiobookList[i].Gatunek + " ");
+                        streamWriter.Write(AudiobookList[i].Category + "_");
+                        streamWriter.Write(AudiobookList[i].Title + "_");
+                        streamWriter.Write(AudiobookList[i].Author + "_");
+                        streamWriter.Write(AudiobookList[i].Length + "_");
+                        streamWriter.Write(AudiobookList[i].NumberOfActors + "_");
+                        streamWriter.WriteLine(AudiobookList[i].Type + "_");
                     }
 
-                    for (int i = 0; i < FilmList.Count; i++)
+                    for (int i = 0; i < MovieList.Count; i++)
                     {
-                        sw.Write(FilmList[i].Kategoria + " ");
-                        sw.Write(FilmList[i].Tytul + " ");
-                        sw.Write(FilmList[i].Autor + " ");
-                        sw.Write(FilmList[i].CzasTrwania + " ");
-                        sw.Write(FilmList[i].DataPremiery + " ");
-                        sw.WriteLine(FilmList[i].Gatunek + " ");
+                        streamWriter.Write(MovieList[i].Category + "_");
+                        streamWriter.Write(MovieList[i].Title + "_");
+                        streamWriter.Write(MovieList[i].Author + "_");
+                        streamWriter.Write(MovieList[i].Length + "_");
+                        streamWriter.Write(MovieList[i].ReleaseDate + "_");
+                        streamWriter.WriteLine(MovieList[i].Type + "_");
                     }
-                    sw.Close();
+                    streamWriter.Close();
 
                     MessageBox.Show("Zapisano pomyslnie");
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine(ex.ToString());
+                    MessageBox.Show(ex.ToString());
                 }
             }
             catch (Exception ex)
@@ -308,19 +310,19 @@ namespace Biblioteczka
             }
         }
 
-        private void SortowanieWgTytuluButton_Click(object sender, RoutedEventArgs e)
+        private void SortByTitleButton_Click(object sender, RoutedEventArgs e)
         {
-            int wybranaKategoria = KategoriaComboBox.SelectedIndex;
-            switch (wybranaKategoria)
+            int selectedCategory = CategoryComboBox.SelectedIndex;
+            switch (selectedCategory)
             {
                 case 0:
-                    ICollectionView KsiazkaCollectionView = CollectionViewSource.GetDefaultView(KsiazkaList); //Pobranie domyślnego widoku kolekcji
+                    ICollectionView KsiazkaCollectionView = CollectionViewSource.GetDefaultView(BookList);
                     if (KsiazkaCollectionView.CanSort)
                     {
                         using (KsiazkaCollectionView.DeferRefresh())
                         {
                             KsiazkaCollectionView.SortDescriptions.Clear();
-                            KsiazkaCollectionView.SortDescriptions.Add(new SortDescription("Tytul",
+                            KsiazkaCollectionView.SortDescriptions.Add(new SortDescription("Title",
                                 ListSortDirection.Ascending));
                         }
                     }
@@ -332,19 +334,19 @@ namespace Biblioteczka
                         using (AudiobookCollectionView.DeferRefresh())
                         {
                             AudiobookCollectionView.SortDescriptions.Clear();
-                            AudiobookCollectionView.SortDescriptions.Add(new SortDescription("Tytul",
+                            AudiobookCollectionView.SortDescriptions.Add(new SortDescription("Title",
                                 ListSortDirection.Ascending));
                         }
                     }
                     break;
                 case 2:
-                    ICollectionView FilmCollectionView = CollectionViewSource.GetDefaultView(FilmList);
+                    ICollectionView FilmCollectionView = CollectionViewSource.GetDefaultView(MovieList);
                     if (FilmCollectionView.CanSort)
                     {
                         using (FilmCollectionView.DeferRefresh())
                         {
                             FilmCollectionView.SortDescriptions.Clear();
-                            FilmCollectionView.SortDescriptions.Add(new SortDescription("Tytul",
+                            FilmCollectionView.SortDescriptions.Add(new SortDescription("Title",
                                 ListSortDirection.Ascending));
                         }
                     }
@@ -352,19 +354,19 @@ namespace Biblioteczka
             }
         }
 
-        private void SortowanieWgAutoraButton_Click(object sender, RoutedEventArgs e)
+        private void SortByAuthorButton_Click(object sender, RoutedEventArgs e)
         {
-            int wybranaKategoria = KategoriaComboBox.SelectedIndex;
-            switch (wybranaKategoria)
+            int selectedCategory = CategoryComboBox.SelectedIndex;
+            switch (selectedCategory)
             {
                 case 0:
-                    ICollectionView KsiazkaCollectionView = CollectionViewSource.GetDefaultView(KsiazkaList);
+                    ICollectionView KsiazkaCollectionView = CollectionViewSource.GetDefaultView(BookList);
                     if (KsiazkaCollectionView.CanSort)
                     {
                         using (KsiazkaCollectionView.DeferRefresh())
                         {
                             KsiazkaCollectionView.SortDescriptions.Clear();
-                            KsiazkaCollectionView.SortDescriptions.Add(new SortDescription("Autor",
+                            KsiazkaCollectionView.SortDescriptions.Add(new SortDescription("Author",
                                 ListSortDirection.Ascending));
                         }
                     }
@@ -376,19 +378,19 @@ namespace Biblioteczka
                         using (AudiobookCollectionView.DeferRefresh())
                         {
                             AudiobookCollectionView.SortDescriptions.Clear();
-                            AudiobookCollectionView.SortDescriptions.Add(new SortDescription("Autor",
+                            AudiobookCollectionView.SortDescriptions.Add(new SortDescription("Author",
                                 ListSortDirection.Ascending));
                         }
                     }
                     break;
                 case 2:
-                    ICollectionView FilmCollectionView = CollectionViewSource.GetDefaultView(FilmList);
+                    ICollectionView FilmCollectionView = CollectionViewSource.GetDefaultView(MovieList);
                     if (FilmCollectionView.CanSort)
                     {
                         using (FilmCollectionView.DeferRefresh())
                         {
                             FilmCollectionView.SortDescriptions.Clear();
-                            FilmCollectionView.SortDescriptions.Add(new SortDescription("Autor",
+                            FilmCollectionView.SortDescriptions.Add(new SortDescription("Author",
                                 ListSortDirection.Ascending));
                         }
                     }
@@ -396,14 +398,14 @@ namespace Biblioteczka
             }
         }
 
-        private void CzyszczenieBiblioteki_Click(object sender, RoutedEventArgs e)
+        private void ClearLibrary_Click(object sender, RoutedEventArgs e)
         {
-            KsiazkaList.Clear();
+            BookList.Clear();
             AudiobookList.Clear();
-            FilmList.Clear();
-            wSumieDoPrzeczytania = 0;
-            wSumieDoWysluchania = 0;
-            wSumieDoObejrzenia = 0;
+            MovieList.Clear();
+            totalToRead = 0;
+            totalToListen = 0;
+            totalToWatch = 0;
         }
     }
 }

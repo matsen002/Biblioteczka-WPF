@@ -1,112 +1,112 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Biblioteczka
+namespace MyLibrary
 {
-    public enum Kategorie { Książka, Audiobook, Film}
-    public enum Gatunki { Fantastyka, ScienceFiction, Młodzieżowa, Horror}
+    public enum Categories { Książka, Audiobook, Film}
+    public enum Types { Fantasy, ScienceFiction, Powieść, Horror}
     
-    interface KoniecznieWsywietlCiekawostke
+    interface ViewNews
     {
-        int Ciekawostka(int a, int b);
+        int News(int a, int b);
     }
 
-    public abstract class Pozycja : KoniecznieWsywietlCiekawostke
+    public abstract class ElementOfLibrary : ViewNews
     {
-        public string Tytul { get; set; }
-        public string Autor { get; set; }
-        public Kategorie Kategoria { get; set; }
-        public Gatunki Gatunek { get; set; }
+        public string Title { get; set; }
+        public string Author { get; set; }
+        public Categories Category { get; set; }
+        public Types Type { get; set; }
 
-        public Pozycja(string tytul, string autor, Kategorie kategoria, Gatunki gatunek)
+        public ElementOfLibrary(string title, string author, Categories category, Types type)
         {
-            Tytul = tytul;
-            Autor = autor;
-            Kategoria = kategoria;
-            Gatunek = gatunek;
+            Title = title;
+            Author = author;
+            Category = category;
+            Type = type;
         }
 
-        public virtual int Ciekawostka(int biezacaWartosc, int dodawacCzyOdejmowac)
+        public virtual int News(int presentValue, int addOrSubtract)
         {
             return 0;
         }
     }
 
-    public class Ksiazka : Pozycja
+    public class Book : ElementOfLibrary
     {
-        public string NumerISBN { get; set; }
-        public int IloscStron { get; set; }
+        public string ISBN { get; set; }
+        public int NumberOfPages { get; set; }
 
-        public Ksiazka(string tytul, string autor, Kategorie kategoria, Gatunki gatunek, string numerISBN, int iloscStron) 
-            : base (tytul, autor, kategoria, gatunek)
+        public Book(string title, string author, Categories category, Types type, string nISBN, int numberOfPages) 
+            : base (title, author, category, type)
         {
-            NumerISBN = numerISBN;
-            IloscStron = iloscStron;
+            ISBN = nISBN;
+            NumberOfPages = numberOfPages;
         }
 
-        public override int Ciekawostka(int wSumieDoPrzeczytania, int dodawacCzyOdejmowac)
+        public override int News(int totalToRead, int addOrSubtract)
         {
-            if (dodawacCzyOdejmowac == 1)       // 1 to dodawanie, 0 to odejmowanie
+            if (addOrSubtract == 1)       // 1 to dodawanie, 0 to odejmowanie
             {
-                wSumieDoPrzeczytania += IloscStron;
+                totalToRead += NumberOfPages;
             }
             else
             {
-                wSumieDoPrzeczytania -= IloscStron;
+                totalToRead -= NumberOfPages;
             }
-            return wSumieDoPrzeczytania;
+            return totalToRead;
         }
     }
 
-    public class Audiobook : Pozycja
+    public class Audiobook : ElementOfLibrary
     {
-        public int CzasTrwania { get; set; }
-        public int LiczbaAktorow { get; set; }
+        public int Length { get; set; }
+        public int NumberOfActors { get; set; }
 
-        public Audiobook(string tytul, string autor, Kategorie kategoria, Gatunki gatunek, int czasTrwania, int liczbaAktorow)
-            : base(tytul, autor, kategoria, gatunek)
+        public Audiobook(string title, string author, Categories category, Types type, int length, int numberOfActors)
+            : base(title, author, category, type)
         {
-            CzasTrwania = czasTrwania;
-            LiczbaAktorow = liczbaAktorow;
+            Length = length;
+            NumberOfActors = numberOfActors;
         }
 
-        public override int Ciekawostka(int wSumieDoWysluchania, int dodawacCzyOdejmowac)
+        public override int News(int totalToListen, int addOrSubtract)
         {
-            if (dodawacCzyOdejmowac == 1)
+            if (addOrSubtract == 1)
             {
-                wSumieDoWysluchania += CzasTrwania;
+                totalToListen += Length;
             }
             else
             {
-                wSumieDoWysluchania -= CzasTrwania;
+                totalToListen -= Length;
             }
-            return wSumieDoWysluchania;
+            return totalToListen;
         }
     }
 
-    public class Film : Pozycja
+    public class Movie : ElementOfLibrary
     {
-        public int CzasTrwania { get; set; }
-        public string DataPremiery { get; set; }
+        public int Length { get; set; }
+        public string ReleaseDate { get; set; }
 
-        public Film(string tytul, string autor, Kategorie kategoria, Gatunki gatunek, int czasTrwania, string dataPremiery)
-            : base(tytul, autor, kategoria, gatunek)
+        public Movie(string title, string author, Categories category, Types type, int length, string releaseDate)
+            : base(title, author, category, type)
         {
-            CzasTrwania = czasTrwania;
-            DataPremiery = dataPremiery;
+            Length = length;
+            ReleaseDate = releaseDate;
         }
 
-        public override int Ciekawostka(int wSumieDoObejrzenia, int dodawacCzyOdejmowac)
+        public override int News(int totalToWatch, int addOrSubtract)
         {
-            if (dodawacCzyOdejmowac == 1)
+            if (addOrSubtract == 1)
             {
-                wSumieDoObejrzenia += CzasTrwania;
+                totalToWatch += Length;
             }
             else
             {
-                wSumieDoObejrzenia -= CzasTrwania;
+                totalToWatch -= Length;
             }
-            return wSumieDoObejrzenia;
+            return totalToWatch;
         }
     }
 }

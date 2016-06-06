@@ -1,14 +1,14 @@
-﻿<Window x:Class="Biblioteczka.MainWindow"
+﻿<Window x:Class="MyLibrary.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:Biblioteczka"
+        xmlns:local="clr-namespace:MyLibrary"
         mc:Ignorable="d"
-        Title="Biblioteczka" Height="650" Width="640" Background="#FFF3E0C9">
+        Title="MyLibrary" Height="660" Width="640" Background="#FFD2D9E4" Foreground="Black" OpacityMask="Black" BorderBrush="Black">
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="170"/>
+            <ColumnDefinition Width="180"/>
             <ColumnDefinition Width="3*"/>
         </Grid.ColumnDefinitions>
 
@@ -18,14 +18,14 @@
             <RowDefinition Height="1*"/>
         </Grid.RowDefinitions>
 
-        <ListView Margin="10" Name="KsiazkaListView" Grid.Row="0" Grid.Column="1" ItemsSource="{Binding KsiazkaList}" Background="White">
+        <ListView Margin="10" Name="KsiazkaListView" Grid.Row="0" Grid.Column="1" ItemsSource="{Binding BookList}" Background="White">
             <ListView.View>
                 <GridView>
-                    <GridViewColumn Header="Tytuł" DisplayMemberBinding="{Binding Tytul}"/>
-                    <GridViewColumn Header="Autor" DisplayMemberBinding="{Binding Autor}"/>
-                    <GridViewColumn Header="Gatunek" DisplayMemberBinding="{Binding Gatunek}"/>
-                    <GridViewColumn Header="Numer ISBN" DisplayMemberBinding="{Binding NumerISBN}"/>
-                    <GridViewColumn Header="Ilość stron" DisplayMemberBinding="{Binding IloscStron}"/>
+                    <GridViewColumn Header="Tytuł" DisplayMemberBinding="{Binding Title}"/>
+                    <GridViewColumn Header="Autor" DisplayMemberBinding="{Binding Author}"/>
+                    <GridViewColumn Header="Gatunek" DisplayMemberBinding="{Binding Type}"/>
+                    <GridViewColumn Header="Numer ISBN" DisplayMemberBinding="{Binding ISBN}"/>
+                    <GridViewColumn Header="Ilość stron" DisplayMemberBinding="{Binding NumberOfPages}"/>
                 </GridView>
             </ListView.View>
         </ListView>
@@ -33,71 +33,71 @@
         <ListView Margin="10" Name="AudiobookListView" Grid.Row="1" Grid.Column="1" ItemsSource="{Binding AudiobookList}" Background="White">
             <ListView.View>
                 <GridView>
-                    <GridViewColumn Header="Tytuł" DisplayMemberBinding="{Binding Tytul}"/>
-                    <GridViewColumn Header="Autor" DisplayMemberBinding="{Binding Autor}"/>
-                    <GridViewColumn Header="Gatunek" DisplayMemberBinding="{Binding Gatunek}"/>
-                    <GridViewColumn Header="Liczba aktorów" DisplayMemberBinding="{Binding LiczbaAktorow}"/>
-                    <GridViewColumn Header="Czas trwania" DisplayMemberBinding="{Binding CzasTrwania}"/>
+                    <GridViewColumn Header="Tytuł" DisplayMemberBinding="{Binding Title}"/>
+                    <GridViewColumn Header="Autor" DisplayMemberBinding="{Binding Author}"/>
+                    <GridViewColumn Header="Gatunek" DisplayMemberBinding="{Binding Type}"/>
+                    <GridViewColumn Header="Liczba aktorów" DisplayMemberBinding="{Binding NumberOfActors}"/>
+                    <GridViewColumn Header="Czas trwania" DisplayMemberBinding="{Binding Length}"/>
                 </GridView>
             </ListView.View>
         </ListView>
 
-        <ListView Margin="10" Name="FilmListView" Grid.Row="2" Grid.Column="1" ItemsSource="{Binding FilmList}" Background="White">
+        <ListView Margin="10" Name="FilmListView" Grid.Row="2" Grid.Column="1" ItemsSource="{Binding MovieList}" Background="White">
             <ListView.View>
                 <GridView>
-                    <GridViewColumn Header="Tytuł" DisplayMemberBinding="{Binding Tytul}"/>
-                    <GridViewColumn Header="Autor" DisplayMemberBinding="{Binding Autor}"/>
-                    <GridViewColumn Header="Gatunek" DisplayMemberBinding="{Binding Gatunek}"/>
-                    <GridViewColumn Header="Czas trwania" DisplayMemberBinding="{Binding CzasTrwania}"/>
-                    <GridViewColumn Header="Data premiery" DisplayMemberBinding="{Binding DataPremiery}"/>
+                    <GridViewColumn Header="Tytuł" DisplayMemberBinding="{Binding Title}"/>
+                    <GridViewColumn Header="Autor" DisplayMemberBinding="{Binding Author}"/>
+                    <GridViewColumn Header="Gatunek" DisplayMemberBinding="{Binding Type}"/>
+                    <GridViewColumn Header="Czas trwania" DisplayMemberBinding="{Binding Length}"/>
+                    <GridViewColumn Header="Data premiery" DisplayMemberBinding="{Binding ReleaseDate}"/>
                 </GridView>
             </ListView.View>
         </ListView>
-        
+
         <StackPanel Grid.Column="0" Grid.RowSpan="3">
             <Label Content="Menu" HorizontalAlignment="Center" FontSize="22" FontStyle="Italic" FontWeight="Heavy" />
             <StackPanel Margin="5, 0">
                 <StackPanel>
                     <Label Content="Kategoria:"/>
-                    <ComboBox Name="KategoriaComboBox" SelectionChanged="KategoriaComboBox_SelectionChanged"/>
+                    <ComboBox Name="CategoryComboBox" SelectionChanged="CategoryComboBox_SelectionChanged"/>
                 </StackPanel>
                 <StackPanel>
                     <Label Content="Tytuł:"/>
-                    <TextBox Name="TytulTextBox"/>
+                    <TextBox Name="TitleTextBox"/>
                 </StackPanel>
                 <StackPanel>
-                    <Label Content="Autor"/>
-                    <TextBox Name="AutorTextBox"/>
+                    <Label Content="Autor:"/>
+                    <TextBox Name="AuthorTextBox"/>
                 </StackPanel>
                 <StackPanel>
-                    <Label Content="Gatunek"/>
-                    <ComboBox Name="GatunekComboBox"/>
+                    <Label Content="Gatunek:"/>
+                    <ComboBox Name="TypeComboBox"/>
                 </StackPanel>
                 <StackPanel>
-                    <TextBlock Name="PierwszeDodatkoweInfoTextBlock" Margin="0,5"/>
-                    <TextBox Name="PierwszeDodatkoweInfoTextBox"/>
+                    <TextBlock Name="FirstAdditionalInformationInfoTextBlock" Margin="0,5"/>
+                    <TextBox Name="FirstAdditionalInformationInfoTextBox"/>
                 </StackPanel>
                 <StackPanel>
-                    <TextBlock Name="DrugieDodatkoweInfoTextBlock" Margin="0,5"/>
-                    <TextBox Name="DrugieDodatkoweInfoTextBox"/>
+                    <TextBlock Name="SecondAdditionalInformationInfoTextBlock" Margin="0,5"/>
+                    <TextBox Name="SecondAdditionalInformationInfoTextBox"/>
                 </StackPanel>
                 <StackPanel>
                     <Label Content="Posortuj według:" HorizontalAlignment="Center"/>
                     <StackPanel Orientation="Horizontal" Margin="2">
-                        <Button Name="SortowanieWgTytuluButton" Content="tutułu" Width="70" Click="SortowanieWgTytuluButton_Click"/>
-                        <Button Name="SortowanieWgAutoraButton" Content="autora" Width="70" Margin="15,0" Click="SortowanieWgAutoraButton_Click"/>
+                        <Button Name="SortByTitleButton" Content="tutułu" Width="70" Click="SortByTitleButton_Click"/>
+                        <Button Name="SortByAuthorButton" Content="autora" Width="70" Margin="15,0" Click="SortByAuthorButton_Click"/>
                     </StackPanel>
                 </StackPanel>
                 <StackPanel Margin="0, 5">
-                    <Button Name="AddButton" Content="Dodaj pozycję" Margin="2, 5, 2, 0" Click="AddButton_Click"/>
+                    <Button Name="AddButton" Content="Dodaj pozycję" Margin="2, 9, 2, 0" Click="AddButton_Click"/>
                     <Button Name="DelateButton" Content="Usuń pozycję" Margin="2" Click="DelateButton_Click"/>
-                    <Button Name="WczytajPlikTXT" Content="Wczytaj dane z pliku" Click="WczytajPlikTXT_Click" Margin="2, 10, 2, 0"/>
-                    <Button Name="ZapiszPlikTXT" Content="Zapisz do pliku" Margin="2" Click="ZapiszPlikTXT_Click"/>
-                    <TextBox Name="NazwaPlikuTXT" Margin="2"/>
+                    <Button Name="ReadTXTFile" Content="Wczytaj dane z pliku" Click="ReadTXTFile_Click" Margin="2, 10, 2, 0"/>
+                    <Button Name="WriteToTXTFile" Content="Zapisz do pliku" Margin="2" Click="WriteToTXTFile_Click"/>
+                    <TextBox Name="fileNameTXT" Margin="2"/>
                     <Label Content="Ciekawostka:" />
-                    <TextBlock Name="CiekawostkaTextBlock" Margin="2, 0"/>
-                    <TextBlock Name="CiekawostkaTextBlock2" Margin="2, 0"/>
-                    <Button Name="CzyszczenieBiblioteki" Content="Usuń wszystkie pozycje" Click="CzyszczenieBiblioteki_Click" Margin="2, 5"/>
+                    <TextBlock Name="NewsTextBlock" Margin="2, 0"/>
+                    <TextBlock Name="NewsTextBlock2" Margin="2, 0"/>
+                    <Button Name="ClearLibrary" Content="Usuń wszystkie pozycje" Click="ClearLibrary_Click" Margin="2, 10"/>
                 </StackPanel>
             </StackPanel>
         </StackPanel>
