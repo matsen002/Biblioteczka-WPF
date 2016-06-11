@@ -39,8 +39,6 @@ namespace MyLibrary
 
             TypeComboBox.ItemsSource = Enum.GetValues(typeof(Types));
             TypeComboBox.SelectedIndex = 0;
-
-            fileNameTXT.Text = "Podaj pełną ścieżkę do pliku";
         }
 
         private void AddButton_Click(object sender, RoutedEventArgs e)
@@ -54,7 +52,7 @@ namespace MyLibrary
 
             int numberOfPages, length, numberOfActors;
             int selectedCategory = CategoryComboBox.SelectedIndex;
-
+            
             switch (selectedCategory)
             {
                 case 0:
@@ -66,8 +64,7 @@ namespace MyLibrary
                         Book book = new Book(title, author, category, type, nISBN, numberOfPages);
                         BookList.Add(book);
 
-                        totalToRead = book.News(totalToRead, 1);
-                        NewsTextBlock2.Text = totalToRead + " stron";
+                        totalToRead = book.News(totalToRead, "add");
                     }
                     catch
                     {
@@ -83,8 +80,7 @@ namespace MyLibrary
                         Audiobook audiobook = new Audiobook(title, author, category, type, length, numberOfActors);
                         AudiobookList.Add(audiobook);
 
-                        totalToListen = audiobook.News(totalToListen, 1);
-                        NewsTextBlock2.Text = totalToListen + " minut nagrań";
+                        totalToListen = audiobook.News(totalToListen, "add");
                     }
                     catch
                     {
@@ -100,8 +96,7 @@ namespace MyLibrary
                         Movie movie = new Movie(title, author, category, type, length, releaseDate);
                         MovieList.Add(movie);
 
-                        totalToWatch = movie.News(totalToWatch, 1);
-                        NewsTextBlock2.Text = totalToWatch + " minut filmów";
+                        totalToWatch = movie.News(totalToWatch, "add");
                     }
                     catch
                     {
@@ -109,9 +104,10 @@ namespace MyLibrary
                     }
                     break;
             }
+            SetNewsTextBlocks(selectedCategory);
         }
 
-        private void CategoryComboBox_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)     //Wybór dodatkowych informacji o pozycjach w zależności od wybranej kategorii
+        private void CategoryComboBox_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
         {
             int selectedCategory = CategoryComboBox.SelectedIndex;
             switch (selectedCategory)
@@ -120,24 +116,22 @@ namespace MyLibrary
                     FirstAdditionalInformationInfoTextBlock.Text = "Numer ISBN:";
                     SecondAdditionalInformationInfoTextBlock.Text = "Ilość stron:";
                     NewsTextBlock.Text = "Do przeczytania jest w sumie ";
-                    NewsTextBlock2.Text = totalToRead + " stron";
                     break;
                 case 1:
                     SecondAdditionalInformationInfoTextBlock.Text = "Czas trwania:";
                     FirstAdditionalInformationInfoTextBlock.Text = "Liczba aktorów:";
                     NewsTextBlock.Text = "Do wysłuchania jest w sumie ";
-                    NewsTextBlock2.Text = totalToListen + " minut nagrań";
                     break;
                 case 2:
                     SecondAdditionalInformationInfoTextBlock.Text = "Czas trwania:";
                     FirstAdditionalInformationInfoTextBlock.Text = "Data premiery:";
                     NewsTextBlock.Text = "Do obejrzenia jest w sumie ";
-                    NewsTextBlock2.Text = totalToWatch + " minut filmów";
                     break;
             }
+            SetNewsTextBlocks(selectedCategory);
         }
 
-        private void DelateButton_Click(object sender, RoutedEventArgs e)   //Usuwanie zaznaczonej pozycji w wybranej kategorii
+        private void DelateButton_Click(object sender, RoutedEventArgs e)
         {
             int selectedCategory = CategoryComboBox.SelectedIndex;
             switch (selectedCategory)
@@ -145,8 +139,7 @@ namespace MyLibrary
                 case 0:
                     try
                     {
-                        totalToRead = BookList[KsiazkaListView.SelectedIndex].News(totalToRead, 0);
-                        NewsTextBlock2.Text = totalToRead + " stron";
+                        totalToRead = BookList[KsiazkaListView.SelectedIndex].News(totalToRead, "subtract");
                         BookList.RemoveAt(KsiazkaListView.SelectedIndex);
                     }
                     catch
@@ -157,8 +150,7 @@ namespace MyLibrary
                 case 1:
                     try
                     {
-                        totalToListen = AudiobookList[AudiobookListView.SelectedIndex].News(totalToListen, 0);
-                        NewsTextBlock2.Text = totalToListen + " minut nagrań";
+                        totalToListen = AudiobookList[AudiobookListView.SelectedIndex].News(totalToListen, "subtract");
                         AudiobookList.RemoveAt(AudiobookListView.SelectedIndex);
                     }
                     catch
@@ -169,8 +161,7 @@ namespace MyLibrary
                 case 2:
                     try
                     {
-                        totalToWatch = MovieList[FilmListView.SelectedIndex].News(totalToWatch, 0);
-                        NewsTextBlock2.Text = totalToWatch + " minut filmów";
+                        totalToWatch = MovieList[FilmListView.SelectedIndex].News(totalToWatch, "subtract");
                         MovieList.RemoveAt(FilmListView.SelectedIndex);
                     }
                     catch
@@ -179,13 +170,14 @@ namespace MyLibrary
                     }
                     break;
             }
+            SetNewsTextBlocks(selectedCategory);
         }
 
         private void ReadTXTFile_Click(object sender, RoutedEventArgs e)
         {
             try
             {
-                string fileName = fileNameTXT.Text;
+                string fileName = TXTfilePath.Text + TXTfileName.Text + ".txt";
 
                 FileStream fileStream = new FileStream(fileName,
                 FileMode.Open, FileAccess.Read);
@@ -209,7 +201,7 @@ namespace MyLibrary
                             Types type = (Types)Enum.Parse(typeof(Types), table[5]);
                             Book book = new Book(title, author, category, type, nISBN, numberOfPages);
                             BookList.Add(book);
-                            totalToRead = book.News(totalToRead, 1);
+                            totalToRead = book.News(totalToRead, "add");
                         }
                         else if (table[0] == "Audiobook")
                         {
@@ -221,7 +213,7 @@ namespace MyLibrary
                             Types type = (Types)Enum.Parse(typeof(Types), table[5]);
                             Audiobook audiobook = new Audiobook(title, author, category, type, length, numberOfActors);
                             AudiobookList.Add(audiobook);
-                            totalToListen = audiobook.News(totalToListen, 1);
+                            totalToListen = audiobook.News(totalToListen, "add");
                         }
                         else if (table[0] == "Film")
                         {
@@ -233,9 +225,9 @@ namespace MyLibrary
                             Types type = (Types)Enum.Parse(typeof(Types), table[5]);
                             Movie movie = new Movie(title, author, category, type, length, releaseDate);
                             MovieList.Add(movie);
-                            totalToWatch = movie.News(totalToWatch, 1);
+                            totalToWatch = movie.News(totalToWatch, "add");
                         }
-                        else MessageBox.Show("Coś jest nie tak");
+                        else MessageBox.Show("Wystąpił błąd podczas odczytywana danych z pliku");
                     }
 
                     streamReader.Close();
@@ -244,12 +236,14 @@ namespace MyLibrary
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine(ex.ToString());
+                    MessageBox.Show("Nie można wczytać pliku.");
                 }
+                int selectedCategory = CategoryComboBox.SelectedIndex;
+                SetNewsTextBlocks(selectedCategory);
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Nie można otworzyć pliku. Podaj dokładną ścieżkę, np. D:\\nazwa_pliku.txt");
+                MessageBox.Show("Nie można otworzyć pliku.");
             }
         }
 
@@ -257,7 +251,7 @@ namespace MyLibrary
         {
             try
             {
-                string fileName = fileNameTXT.Text;
+                string fileName = TXTfilePath.Text + TXTfileName.Text + ".txt";
 
                 FileStream fileStream = new FileStream(fileName,
                 FileMode.CreateNew, FileAccess.ReadWrite);
@@ -297,16 +291,18 @@ namespace MyLibrary
                     }
                     streamWriter.Close();
 
-                    MessageBox.Show("Zapisano pomyslnie");
+                    MessageBox.Show("Zapisano pomyślnie");
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show(ex.ToString());
+                    MessageBox.Show("Nie można zapisać do pliku.");
                 }
+                int selectedCategory = CategoryComboBox.SelectedIndex;
+                SetNewsTextBlocks(selectedCategory);
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.ToString());
+                MessageBox.Show("Plik o podanej nazwie już istnieje");
             }
         }
 
@@ -406,6 +402,34 @@ namespace MyLibrary
             totalToRead = 0;
             totalToListen = 0;
             totalToWatch = 0;
+            int selectedCategory = CategoryComboBox.SelectedIndex;
+            SetNewsTextBlocks(selectedCategory);
+        }
+
+        private void ViewHelp_Click(object sender, RoutedEventArgs e)
+        {
+            string text1 = "Kilka przydatnych informacji o działaniu programu:",
+                text2 = "\n1. Zapisywanie do pliku: \nAby zapisać plik należy podać pełną jego nazwę i lokalizację.\nPliki bez podanej ścieżki domyśnie zapisywane są wewnątrz projektu w folderze (...)/bin/Debug",
+                text3 = "\n2. Wczytywany plik musi posiadać rozszerzenie .txt. Zapis również następuje do pliku tego typu. Członu .txt nie należy wpisywać w nazwie.",
+                text4 = "\n3. Sortowanie dotyczy zaznaczonej kategorii. W celu usunięcia konkretnej pozycji również należy zaznaczyć odpowiednią dla niej kategorię. ";
+                
+            MessageBox.Show(text1 + text2 + text3 +text4, "Pomoc");
+        }
+
+        private void SetNewsTextBlocks(int selectedCategory)
+        {
+            switch (selectedCategory)
+            {
+                case 0:
+                    NewsTextBlock2.Text = totalToRead + " stron";
+                    break;
+                case 1:
+                    NewsTextBlock2.Text = totalToListen + " minut nagrań";
+                    break;
+                case 2:
+                    NewsTextBlock2.Text = totalToWatch + " minut filmów";
+                    break;
+            }
         }
     }
 }

@@ -8,7 +8,7 @@ namespace MyLibrary
     
     interface ViewNews
     {
-        int News(int a, int b);
+        int News(int a, string b);
     }
 
     public abstract class ElementOfLibrary : ViewNews
@@ -26,7 +26,7 @@ namespace MyLibrary
             Type = type;
         }
 
-        public virtual int News(int presentValue, int addOrSubtract)
+        public virtual int News(int presentValue, string addOrSubtract)
         {
             return 0;
         }
@@ -44,13 +44,13 @@ namespace MyLibrary
             NumberOfPages = numberOfPages;
         }
 
-        public override int News(int totalToRead, int addOrSubtract)
+        public override int News(int totalToRead, string addOrSubtract)
         {
-            if (addOrSubtract == 1)       // 1 to dodawanie, 0 to odejmowanie
+            if (addOrSubtract == "add")
             {
                 totalToRead += NumberOfPages;
             }
-            else
+            else if (addOrSubtract == "subtract")
             {
                 totalToRead -= NumberOfPages;
             }
@@ -70,13 +70,13 @@ namespace MyLibrary
             NumberOfActors = numberOfActors;
         }
 
-        public override int News(int totalToListen, int addOrSubtract)
+        public override int News(int totalToListen, string addOrSubtract)
         {
-            if (addOrSubtract == 1)
+            if (addOrSubtract == "add")
             {
                 totalToListen += Length;
             }
-            else
+            else if (addOrSubtract == "subtract")
             {
                 totalToListen -= Length;
             }
@@ -96,13 +96,13 @@ namespace MyLibrary
             ReleaseDate = releaseDate;
         }
 
-        public override int News(int totalToWatch, int addOrSubtract)
+        public override int News(int totalToWatch, string addOrSubtract)
         {
-            if (addOrSubtract == 1)
+            if (addOrSubtract == "add")
             {
                 totalToWatch += Length;
             }
-            else
+            else if (addOrSubtract == "subtract")
             {
                 totalToWatch -= Length;
             }

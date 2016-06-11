@@ -5,10 +5,10 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:MyLibrary"
         mc:Ignorable="d"
-        Title="MyLibrary" Height="660" Width="640" Background="#FFD2D9E4" Foreground="Black" OpacityMask="Black" BorderBrush="Black">
+        Title="MyLibrary" Height="680" Width="640" Background="#FFD2D9E4" Foreground="Black" OpacityMask="Black" BorderBrush="Black">
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="180"/>
+            <ColumnDefinition Width="210"/>
             <ColumnDefinition Width="3*"/>
         </Grid.ColumnDefinitions>
 
@@ -55,37 +55,37 @@
         </ListView>
 
         <StackPanel Grid.Column="0" Grid.RowSpan="3">
-            <Label Content="Menu" HorizontalAlignment="Center" FontSize="22" FontStyle="Italic" FontWeight="Heavy" />
+            <Label Content="Menu" HorizontalAlignment="Center" FontSize="22" FontStyle="Italic" FontWeight="Heavy" Height="35"/>
             <StackPanel Margin="5, 0">
                 <StackPanel>
-                    <Label Content="Kategoria:"/>
-                    <ComboBox Name="CategoryComboBox" SelectionChanged="CategoryComboBox_SelectionChanged"/>
+                    <Label Content="Kategoria:" />
+                    <ComboBox Name="CategoryComboBox" SelectionChanged="CategoryComboBox_SelectionChanged" Margin="0, 0, 0, 5"/>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal">
+                    <Label Content="Tytuł:" Width="45"/>
+                    <TextBox Name="TitleTextBox" Width="155"/>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal">
+                    <Label Content="Autor:" Width="45"/>
+                    <TextBox Name="AuthorTextBox" Width="155"/>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" Margin="0, 5">
+                    <Label Content="Gatunek:" Width="60" HorizontalAlignment="Left"/>
+                    <ComboBox Name="TypeComboBox" Width="140"/>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Name="FirstAdditionalInformationInfoTextBlock" Margin="0,5" Width="90"/>
+                    <TextBox Name="FirstAdditionalInformationInfoTextBox" Width="110"/>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Name="SecondAdditionalInformationInfoTextBlock" Margin="0,5" Width="90"/>
+                    <TextBox Name="SecondAdditionalInformationInfoTextBox" Width="110"/>
                 </StackPanel>
                 <StackPanel>
-                    <Label Content="Tytuł:"/>
-                    <TextBox Name="TitleTextBox"/>
-                </StackPanel>
-                <StackPanel>
-                    <Label Content="Autor:"/>
-                    <TextBox Name="AuthorTextBox"/>
-                </StackPanel>
-                <StackPanel>
-                    <Label Content="Gatunek:"/>
-                    <ComboBox Name="TypeComboBox"/>
-                </StackPanel>
-                <StackPanel>
-                    <TextBlock Name="FirstAdditionalInformationInfoTextBlock" Margin="0,5"/>
-                    <TextBox Name="FirstAdditionalInformationInfoTextBox"/>
-                </StackPanel>
-                <StackPanel>
-                    <TextBlock Name="SecondAdditionalInformationInfoTextBlock" Margin="0,5"/>
-                    <TextBox Name="SecondAdditionalInformationInfoTextBox"/>
-                </StackPanel>
-                <StackPanel>
-                    <Label Content="Posortuj według:" HorizontalAlignment="Center"/>
+                    <Label Content="Posortuj według:" HorizontalAlignment="Center" Margin="0, 5, 0, 0"/>
                     <StackPanel Orientation="Horizontal" Margin="2">
-                        <Button Name="SortByTitleButton" Content="tutułu" Width="70" Click="SortByTitleButton_Click"/>
-                        <Button Name="SortByAuthorButton" Content="autora" Width="70" Margin="15,0" Click="SortByAuthorButton_Click"/>
+                        <Button Name="SortByTitleButton" Content="Tytułu" Width="85" Click="SortByTitleButton_Click"/>
+                        <Button Name="SortByAuthorButton" Content="Autora" Width="85" Margin="15,0" Click="SortByAuthorButton_Click"/>
                     </StackPanel>
                 </StackPanel>
                 <StackPanel Margin="0, 5">
@@ -93,10 +93,18 @@
                     <Button Name="DelateButton" Content="Usuń pozycję" Margin="2" Click="DelateButton_Click"/>
                     <Button Name="ReadTXTFile" Content="Wczytaj dane z pliku" Click="ReadTXTFile_Click" Margin="2, 10, 2, 0"/>
                     <Button Name="WriteToTXTFile" Content="Zapisz do pliku" Margin="2" Click="WriteToTXTFile_Click"/>
-                    <TextBox Name="fileNameTXT" Margin="2"/>
-                    <Label Content="Ciekawostka:" />
+                    <StackPanel>
+                        <Label Content="Pełna ścieżka do pliku:"/>
+                        <TextBox Name="TXTfilePath" Margin="2"/>
+                    </StackPanel>
+                    <StackPanel>
+                        <Label Content="Nazwa pliku tekstowego:"/>
+                        <TextBox Name="TXTfileName" Margin="2"/>
+                    </StackPanel>
+                    <Label Content="Ciekawostka:" Margin="0, 2, 0, 0"/>
                     <TextBlock Name="NewsTextBlock" Margin="2, 0"/>
                     <TextBlock Name="NewsTextBlock2" Margin="2, 0"/>
+                    <Button Name="ViewHelp" Content="Wyświetl pomoc" Margin="2, 5" Click="ViewHelp_Click"/>
                     <Button Name="ClearLibrary" Content="Usuń wszystkie pozycje" Click="ClearLibrary_Click" Margin="2, 10"/>
                 </StackPanel>
             </StackPanel>
