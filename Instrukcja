@@ -1,0 +1,9 @@
+Projektem jest biblioteczka, będąca przykładową bazą danych. 
+W programie można: dodawać nowe pozycje, usuwać stare, sortować bibliotekę, zapisywać ją do pliku tekstowego, lub wczytywać z niego oraz wyświetlić pomoc.
+Podstawową klasą jest ElementOfLibrary, czyli ogólnie pozycja w bibliotece. Po niej dziedziczą klasy Book, Audiobook, Movie, czyli już to,
+czym konkretnie dana pozycja jest. Każda z pozycji jest jednocześnie jednym z dostępnych enumów.
+Elementy danej klasy zapisywane są do list (mamy więc 3 listy). Informacje o elementach stworzono jako propercje (np. tytuł, autora).
+Za pomocą interfejsu wymuszono wyświetlanie zapisanej w klasach "ciekawostki" na temat danej kategorii pozycji.
+Enuma użyto również żeby określić jakiego gatunku jest dana pozycja (np. fantasy).
+Za pomocą try catch zrobiono obsługę podstawowych błędów (np. przy zapisie/odczycie pliku txt).
+Cały program podzielony jest na metody wykonujące poszczególne funkcjonalności.
